@@ -1,6 +1,0 @@
-packages: supply-chain-core
-
-constraints:
-    base == 4.17.*
-  , tasty == 1.4
-  , tasty-hedgehog == 1.4.0.0
