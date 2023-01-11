@@ -12,62 +12,54 @@ import SupplyChain.Core.Job (order, perform)
 import SupplyChain.Core.Referral (Referral (Referral))
 import SupplyChain.Core.Vendor (Vendor (Vendor, handle))
 import System.IO (IO)
-import Test.Tasty (defaultMain, testGroup, TestTree)
-import Test.Tasty.HUnit ((@?=), testCase)
+import Test.Hspec
 
 import qualified Data.List as List
 import qualified SupplyChain.Core.Job as Job
 
 main :: IO ()
-main = defaultMain tests
+main = hspec do
 
-tests :: TestTree
-tests = testGroup "Core"
-    [ testGroup "pure _"
-        [ testCase "run Identity" $ Job.run (pure 'a') @?= Identity 'a'
-        , testCase "run Maybe" $ Job.run (pure 'a') @?= Just 'a'
-        , testCase "eval" $ Job.eval (pure 'a') @?= 'a'
-        ]
-    , testGroup "pure _ <&> _"
-        [ testCase "run Identity" $ Job.run (pure 'a' <&> succ) @?= Identity 'b'
-        , testCase "run Maybe" $ Job.run (pure 'a' <&> succ) @?= Just 'b'
-        , testCase "eval" $ Job.eval (pure 'a' <&> succ) @?= 'b'
-        ]
-    , testGroup "perform"
-        [ testCase "Single" $ Job.run (perform ['a', 'b']) @?= ['a', 'b']
-        , testCase "Functor" $ Job.run (perform ['a', 'b'] <&> succ) @?= ['b', 'c']
-        , testCase "Applicative composition" $
+    describe "pure _" do
+        it "run Identity" $ Job.run (pure 'a') `shouldBe` Identity 'a'
+        it "run Maybe" $ Job.run (pure 'a') `shouldBe` Just 'a'
+        it "eval" $ Job.eval (pure 'a') `shouldBe` 'a'
+
+    describe "pure _ <&> _" do
+        it "run Identity" $ Job.run (pure 'a' <&> succ) `shouldBe` Identity 'b'
+        it "run Maybe" $ Job.run (pure 'a' <&> succ) `shouldBe` Just 'b'
+        it "eval" $ Job.eval (pure 'a' <&> succ) `shouldBe` 'b'
+
+    describe "perform" do
+        it "Single" $ Job.run (perform ['a', 'b']) `shouldBe` ['a', 'b']
+        it "Functor" $ Job.run (perform ['a', 'b'] <&> succ) `shouldBe` ['b', 'c']
+        it "Applicative composition" $
             Job.run ((<>) <$> perform ["a", "b"] <*> perform ["c", "d"])
-            @?= ["ac", "ad", "bc", "bd"]
-        , let
-            j = do
+            `shouldBe` ["ac", "ad", "bc", "bd"]
+
+    it "Monadic composition" do
+        let j = do
               a <- perform [1 :: Int, 3]
               b <- perform ['a', 'b', 'c']
               perform (List.replicate a b)
-          in
-            testCase "Monadic composition" $ Job.run j @?= "abcaaabbbccc"
-        ]
-    , testGroup "order" $
+        Job.run j `shouldBe` "abcaaabbbccc"
+
+    describe "order" do
         let
-          -- Converts dynamic effects to static effects
-          f = (go >-)
-            where
-              go = Vendor { handle = \x -> perform x <&> (`Referral` go) }
-        in
-        [ testCase "Single" $ Job.run (f $ order ['a', 'b']) @?= ['a', 'b']
-        , testCase "Functor" $ Job.run (f $ order ['a', 'b'] <&> succ) @?= ['b', 'c']
-        , testCase "Applicative composition" $
-            let
-              j = f $ (<>) <$> order ["a", "b"] <*> order ["c", "d"]
-            in
-              Job.run j @?= ["ac", "ad", "bc", "bd"]
-        , testCase "Monadic composition" $
-            let
-              j = do
-                a <- order [1 :: Int, 3]
-                b <- order ['a', 'b', 'c']
-                order (List.replicate a b)
-            in
-              Job.run (f j) @?= "abcaaabbbccc"
-        ]
-    ]
+            -- Converts dynamic effects to static effects
+            f = (go >-)
+              where
+                go = Vendor { handle = \x -> perform x <&> (`Referral` go) }
+
+        it "Single" $ Job.run (f $ order ['a', 'b']) `shouldBe` ['a', 'b']
+        it "Functor" $ Job.run (f $ order ['a', 'b'] <&> succ) `shouldBe` ['b', 'c']
+        it "Applicative composition" do
+            let j = f $ (<>) <$> order ["a", "b"] <*> order ["c", "d"]
+            Job.run j `shouldBe` ["ac", "ad", "bc", "bd"]
+
+        it "Monadic composition" do
+            let j = do
+                  a <- order [1 :: Int, 3]
+                  b <- order ['a', 'b', 'c']
+                  order (List.replicate a b)
+            Job.run (f j) `shouldBe` "abcaaabbbccc"
