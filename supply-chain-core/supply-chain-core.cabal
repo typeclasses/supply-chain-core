@@ -35,7 +35,7 @@ common base
         ViewPatterns
 
     build-depends:
-        base ^>= 4.16 || ^>= 4.17
+      , base ^>= 4.16 || ^>= 4.17
 
 library
     import: base
@@ -58,7 +58,7 @@ test-suite test-supply-chain-core
     hs-source-dirs: test-supply-chain-core
     main-is: Main.hs
     build-depends:
-        supply-chain-core
+      , supply-chain-core
       , tasty ^>= 1.3 || ^>= 1.4
       , tasty-hedgehog ^>= 1.3 || ^>= 1.4
       , tasty-hunit ^>= 0.10
