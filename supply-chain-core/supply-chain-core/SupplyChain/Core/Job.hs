@@ -16,10 +16,9 @@ import Data.Functor (Functor)
 import Data.Functor.Const (Const)
 import Data.Void (Void)
 import SupplyChain.Core.Effect (Effect)
+import SupplyChain.Core.Effect qualified as Effect
 import SupplyChain.Core.FreeMonad (FreeMonad)
-
-import qualified SupplyChain.Core.Effect as Effect
-import qualified SupplyChain.Core.FreeMonad as FreeMonad
+import SupplyChain.Core.FreeMonad qualified as FreeMonad
 
 {-| Monadic context that supports making requests, performing actions,
     and returning a single result -}

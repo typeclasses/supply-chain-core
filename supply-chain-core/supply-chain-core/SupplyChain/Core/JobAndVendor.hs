@@ -8,17 +8,15 @@ module SupplyChain.Core.JobAndVendor
   )
   where
 
+import Data.Functor ((<&>))
 import SupplyChain.Core.Effect (Effect)
 import SupplyChain.Core.Job (Job)
+import SupplyChain.Core.Job qualified as Job
 import SupplyChain.Core.Referral (Referral (Referral))
+import SupplyChain.Core.Referral qualified as Referral
 import SupplyChain.Core.Unit (Unit (Unit))
 import SupplyChain.Core.Vendor (Vendor (Vendor, handle))
 import SupplyChain.Core.VendorAndReferral (alterVendor)
-
-import qualified SupplyChain.Core.Job as Job
-import qualified SupplyChain.Core.Referral as Referral
-
-import Data.Functor
 
 alterJob :: (forall x. Effect up action x -> Job up' action' x)
     -> Job up action product -> Job up' action' product

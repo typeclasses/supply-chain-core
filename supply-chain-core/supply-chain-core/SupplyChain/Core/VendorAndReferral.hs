@@ -13,8 +13,7 @@ import Data.Functor (Functor, fmap)
 import Data.Traversable (Traversable)
 import SupplyChain.Core.Effect (Effect)
 import SupplyChain.Core.Job (Job)
-
-import qualified SupplyChain.Core.Job as Job
+import SupplyChain.Core.Job qualified as Job
 
 -- | Makes requests, responds to requests, and performs actions
 newtype Vendor up down action =

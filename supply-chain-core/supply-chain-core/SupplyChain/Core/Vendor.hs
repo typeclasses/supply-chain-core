@@ -14,10 +14,9 @@ import Data.Functor.Const (Const)
 import Data.Void (Void)
 import SupplyChain.Core.Effect (Effect)
 import SupplyChain.Core.Job (Job)
+import SupplyChain.Core.Job qualified as Job
 import SupplyChain.Core.VendorAndReferral (Vendor (..), Referral (..))
-
-import qualified SupplyChain.Core.Job as Job
-import qualified SupplyChain.Core.VendorAndReferral as VendorAndReferral
+import SupplyChain.Core.VendorAndReferral qualified as VendorAndReferral
 
 {-| An action in which a vendor handles a single request
 

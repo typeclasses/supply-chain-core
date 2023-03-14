@@ -10,12 +10,11 @@ module SupplyChain.Core.FreeMonad
 
 import Control.Applicative (Applicative (pure, (<*>)))
 import Control.Monad (Monad ((>>=)))
+import Control.Monad qualified as Monad
 import Data.Function ((&), ($), (.))
 import Data.Functor (Functor, (<&>))
 import SupplyChain.Core.FreePointedFunctor (FreePointedFunctor)
-
-import qualified Control.Monad as Monad
-import qualified SupplyChain.Core.FreePointedFunctor as FreePointedFunctor
+import SupplyChain.Core.FreePointedFunctor qualified as FreePointedFunctor
 
 data FreeMonad f a =
     Step (FreePointedFunctor f a)

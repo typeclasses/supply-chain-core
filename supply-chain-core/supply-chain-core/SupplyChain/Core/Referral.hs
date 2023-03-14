@@ -10,8 +10,7 @@ module SupplyChain.Core.Referral
 import SupplyChain.Core.Effect (Effect)
 import SupplyChain.Core.Job (Job)
 import SupplyChain.Core.VendorAndReferral (Referral)
-
-import qualified SupplyChain.Core.VendorAndReferral as VendorAndReferral
+import SupplyChain.Core.VendorAndReferral qualified as VendorAndReferral
 
 alter :: (forall x. Effect up action x -> Job up' action' x)
     -> Referral up down action product -> Referral up' down action' product

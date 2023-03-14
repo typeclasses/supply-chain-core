@@ -4,18 +4,17 @@ import Control.Applicative (pure, (<*>))
 import Data.Function (($))
 import Data.Functor ((<&>), (<$>))
 import Data.Functor.Identity (Identity (Identity))
+import Data.List qualified as List
 import Data.Maybe (Maybe (..))
 import Data.Semigroup ((<>))
 import Prelude (Int, succ)
 import SupplyChain.Core.Connect ((>-))
 import SupplyChain.Core.Job (order, perform)
+import SupplyChain.Core.Job qualified as Job
 import SupplyChain.Core.Referral (Referral (Referral))
 import SupplyChain.Core.Vendor (Vendor (Vendor, handle))
 import System.IO (IO)
 import Test.Hspec
-
-import qualified Data.List as List
-import qualified SupplyChain.Core.Job as Job
 
 main :: IO ()
 main = hspec do
